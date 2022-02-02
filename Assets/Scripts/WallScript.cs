@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class WallScript : MonoBehaviour
 {
-    
+    HealthManagerScript objHPScript;
+    public bool isDistructable = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,7 +22,7 @@ public class WallScript : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Enemy"))
         {
-            collision.gameObject.GetComponent<EnemyScript>().DeathOnWallCollision();
+            collision.gameObject.GetComponent<HealthManagerScript>().DeathOnCollision();
         }
         else if(collision.gameObject.CompareTag("Player"))
         {

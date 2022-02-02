@@ -6,11 +6,12 @@ public class SpawnManager : MonoBehaviour
 {
     public GameObject enemyPrefabs;
 
-    public float spawnRangeX;
-    public float spawnRangeZ;
+    //public float spawnRangeX;
+    //public float spawnRangeZ;
+    public Transform[] spawnPoints; 
 
     public int maxEnemy = 15;
-    public int curEnemySpawned = 0;
+    //public int curEnemySpawned = 0;
     public int enemyPerWave = 5;
 
     public int enemyCount;
@@ -31,36 +32,28 @@ public class SpawnManager : MonoBehaviour
         SpawnWave();
     }
 
-    public Vector3 GenerateSpawnPoint()
+    public Vector3 GetRandomSpawnPoint()
     {
-        return new Vector3(Random.Range(-spawnRangeX, spawnRangeX), 0, Random.Range(-spawnRangeZ, spawnRangeZ));
+        int selectedSpawnPoint = Random.Range(0, spawnPoints.Length);
+        return spawnPoints[selectedSpawnPoint].position;
     }
 
 
 
     public void SpawnWave()
     {
-        if (enemyCount == 0 && curEnemySpawned != maxEnemy)
+        if (enemyCount == 0)
         {
             for (int i = 0; i < enemyPerWave; i++)
             {
-                Instantiate(enemyPrefabs, GenerateSpawnPoint(), enemyPrefabs.transform.rotation);
+                Instantiate(enemyPrefabs, GetRandomSpawnPoint(), enemyPrefabs.transform.rotation);
 
             }
-            curEnemySpawned += enemyPerWave;
         }
     }
 
     IEnumerator LevelTimer()
     {
         yield return new WaitForSeconds(Timer);
-        if(curEnemySpawned != maxEnemy)
-        {
-            Lost = 1;
-        }
-        else
-        {
-            Lost = -1;
-        }
     }
 }

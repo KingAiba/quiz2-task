@@ -39,7 +39,7 @@ public class ProjectileScript : MonoBehaviour
     {
         if(other.gameObject.CompareTag("Enemy"))
         {
-            other.GetComponent<EnemyScript>().TakeDamage(damage);
+            other.GetComponent<HealthManagerScript>().TakeDamage(damage);
             PushEnemy(other.GetComponent<Rigidbody>());
 
             StopCoroutine(TTLTimer());

@@ -5,20 +5,27 @@ using UnityEngine;
 public class EnemyScript : MonoBehaviour
 {
 
-    public float maxHp = 150;
-    public float curHp = 0;
-
     public Vector3 moveDirection;
     public movementScript enemyMovementScript;
+    public HealthManagerScript enemyHealthScript;
 
     public GameObject target;
 
-    public bool isDead = false;
+    public float damage = 10;
+    public float deathPushForce = 15;
+
+    private GameManager gameManager; 
+
     // Start is called before the first frame update
     void Start()
     {
-        SetCurHp(maxHp);
+        
         enemyMovementScript = GetComponent<movementScript>();
+        enemyHealthScript = GetComponent<HealthManagerScript>();
+
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        gameManager.AddToList(gameObject);
+
         target = GameObject.Find("Player");
     }
 
@@ -26,13 +33,12 @@ public class EnemyScript : MonoBehaviour
     void Update()
     {
         LookAtTarget();
-        CheckDeath();
     }
 
     private void FixedUpdate()
     {
-        rotateObject();
-        moveObject();
+        RotateObject();
+        MoveObject();
     }
 
     public void LookAtTarget()
@@ -43,42 +49,28 @@ public class EnemyScript : MonoBehaviour
         }
     }
 
-    public void rotateObject()
+    public void RotateObject()
     {
         enemyMovementScript.rotateObject(moveDirection);
     }
 
-    public void moveObject()
+    public void MoveObject()
     {
         enemyMovementScript.moveObject(moveDirection);
     }
 
-    public void SetCurHp(float val)
+    public void PushObject(Rigidbody otherRB)
     {
-        curHp = val;
+        otherRB.AddForce(transform.forward * deathPushForce, ForceMode.Impulse);
     }
 
-    public void TakeDamage(float val)
+    private void OnCollisionEnter(Collision collision)
     {
-        curHp -= val;
-        if(curHp <= 0)
+        if(collision.gameObject.CompareTag("Player"))
         {
-            curHp = 0;
-            isDead = true;
-        }
-    }
-
-    public void DeathOnWallCollision()
-    {
-        isDead = true;
-        Destroy(gameObject);
-    }
-
-    public void CheckDeath()
-    {
-        if(isDead)
-        {
-            Destroy(gameObject);
+            collision.gameObject.GetComponent<HealthManagerScript>().TakeDamage(damage);
+            PushObject(collision.gameObject.GetComponent<Rigidbody>());
+            enemyHealthScript.DeathOnCollision();
         }
     }
 }

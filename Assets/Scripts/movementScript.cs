@@ -31,7 +31,7 @@ public class movementScript : MonoBehaviour
     {
         if (objectRB != null)
         {
-            objectRB.AddForce(moveDirection * speed * objectRB.mass);
+            objectRB.AddForce(moveDirection * speed * objectRB.mass, ForceMode.Acceleration);
 
         }
     }

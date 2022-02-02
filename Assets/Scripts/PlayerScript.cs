@@ -67,4 +67,6 @@ public class PlayerScript : MonoBehaviour
         playerMovementScript.moveObject(moveDirection);
         playerMovementScript.rotateObject(moveDirection);
     }
+
+    
 }
