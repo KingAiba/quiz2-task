@@ -22,11 +22,11 @@ public class WallScript : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Enemy"))
         {
-            collision.gameObject.GetComponent<HealthManagerScript>().DeathOnCollision();
+            collision.gameObject.GetComponent<EnemyScript>().Death();
         }
         else if(collision.gameObject.CompareTag("Player"))
         {
-            
+            collision.gameObject.GetComponent<PlayerScript>().Death();
         }
     }
 }

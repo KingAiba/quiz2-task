@@ -6,12 +6,9 @@ public class SpawnManager : MonoBehaviour
 {
     public GameObject enemyPrefabs;
 
-    //public float spawnRangeX;
-    //public float spawnRangeZ;
     public Transform[] spawnPoints; 
 
     public int maxEnemy = 15;
-    //public int curEnemySpawned = 0;
     public int enemyPerWave = 5;
 
     public int enemyCount;
@@ -19,16 +16,19 @@ public class SpawnManager : MonoBehaviour
     public float Timer = 60;
     public int Lost = 0;
 
+    private GameManager gameManger;
+
     // Start is called before the first frame update
     void Start()
     {
+        gameManger = GameObject.Find("GameManager").GetComponent<GameManager>();
         StartCoroutine(LevelTimer());
     }
 
     // Update is called once per frame
     void Update()
     {
-        enemyCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
+        enemyCount = gameManger.GetActiveEnemyCount();
         SpawnWave();
     }
 
@@ -42,7 +42,7 @@ public class SpawnManager : MonoBehaviour
 
     public void SpawnWave()
     {
-        if (enemyCount == 0)
+        if (enemyCount < enemyPerWave)
         {
             for (int i = 0; i < enemyPerWave; i++)
             {

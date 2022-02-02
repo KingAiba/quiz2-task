@@ -1,25 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
-public class PlayerScript : MonoBehaviour
+public class PlayerScript : HealthManagerScript
 {
     public Vector3 moveDirection;
     public movementScript playerMovementScript;
 
     public WeaponHolderScript weaponHolder;
 
-    
-    void Start()
+    public TMP_Text hpText;
+
+
+    public override void Start()
     {
+        base.Start();
         playerMovementScript = GetComponent<movementScript>();
         weaponHolder = transform.Find("WeaponHolder").GetComponent<WeaponHolderScript>();
+        gameManager.playerScript = this;
     }
 
-    
-    void Update()
+
+    public override void Update()
     {
-        getInput();      
+        base.Update();
+        getInput();
+        UpdateHPText();
     }
 
     private void FixedUpdate()
@@ -29,13 +36,22 @@ public class PlayerScript : MonoBehaviour
 
     public void getInput()
     {
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
+        if (!isDead)
+        {
+            float horizontalInput = Input.GetAxis("Horizontal");
+            float verticalInput = Input.GetAxis("Vertical");
 
-        moveDirection = new Vector3(horizontalInput, 0, verticalInput).normalized;
+            moveDirection = new Vector3(horizontalInput, 0, verticalInput).normalized;
 
-        SwitchWeapons();
-        Attack();
+            SwitchWeapons();
+            Attack();
+        }
+
+    }
+
+    public void UpdateHPText()
+    {
+        hpText.SetText("HP:" + curHp + "/" + maxHp);
     }
 
     public void Attack()

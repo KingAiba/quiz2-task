@@ -8,20 +8,20 @@ public class GameManager : MonoBehaviour
     public int score = 0;
     public List<GameObject> ActiveEnemies = new List<GameObject>();
 
-    public GameObject playerObject;
+    public PlayerScript playerScript;
 
     public TMP_Text endGameText;
 
     
     void Start()
     {
-        playerObject = GameObject.Find("Player");
+        //playerObject = GameObject.Find("Player");
     }
 
     
     void Update()
     {
-        
+        OnPlayerDeath();
     }
 
     public void AddToList(GameObject obj)
@@ -36,7 +36,25 @@ public class GameManager : MonoBehaviour
 
     public void AddScore(int amount)
     {
-        score += amount;
-    }
+        if (!playerScript.isDead)
+        {
+            score += amount;
+        }
         
+    }
+
+    public int GetActiveEnemyCount()
+    {
+        return ActiveEnemies.Count;
+    }
+
+    public void OnPlayerDeath()
+    {
+        if(playerScript.isDead)
+        {
+            endGameText.gameObject.SetActive(true);
+            endGameText.SetText("YOU DIED\nSCORE:" + score);
+        }
+    }
+
 }

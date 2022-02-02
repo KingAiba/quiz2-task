@@ -45,6 +45,10 @@ public class ProjectileScript : MonoBehaviour
             StopCoroutine(TTLTimer());
             Destroy(gameObject);
         }
+        else if(other.gameObject.CompareTag("Wall"))
+        {
+            Destroy(gameObject);
+        }
     }
 
     IEnumerator TTLTimer()

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyScript : MonoBehaviour
+public class EnemyScript : HealthManagerScript
 {
 
     public Vector3 moveDirection;
@@ -14,24 +14,20 @@ public class EnemyScript : MonoBehaviour
     public float damage = 10;
     public float deathPushForce = 15;
 
-    private GameManager gameManager; 
-
-    // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
-        
+        base.Start();
         enemyMovementScript = GetComponent<movementScript>();
         enemyHealthScript = GetComponent<HealthManagerScript>();
-
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+   
         gameManager.AddToList(gameObject);
 
         target = GameObject.Find("Player");
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void Update()
     {
+        base.Update();
         LookAtTarget();
     }
 
@@ -64,13 +60,21 @@ public class EnemyScript : MonoBehaviour
         otherRB.AddForce(transform.forward * deathPushForce, ForceMode.Impulse);
     }
 
+    public override void Death()
+    {   
+        gameManager.RemoveFromList(gameObject);
+        gameManager.AddScore(10);
+        base.Death();
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.CompareTag("Player"))
         {
             collision.gameObject.GetComponent<HealthManagerScript>().TakeDamage(damage);
             PushObject(collision.gameObject.GetComponent<Rigidbody>());
-            enemyHealthScript.DeathOnCollision();
+            enemyHealthScript.Death();
         }
     }
+
 }

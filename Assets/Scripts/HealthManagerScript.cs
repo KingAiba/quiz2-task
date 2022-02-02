@@ -7,16 +7,21 @@ public class HealthManagerScript : MonoBehaviour
     public float maxHp = 150;
     public float curHp = 0;
 
+    public float destroyDelay = 10f;
+
     public bool isDead = false;
 
+    public GameManager gameManager;
+
     // Start is called before the first frame update
-    void Start()
+    public virtual void Start()
     {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         SetCurHp(maxHp);
     }
 
     // Update is called once per frame
-    void Update()
+    public virtual void Update()
     {
         CheckDeath();
     }
@@ -36,17 +41,18 @@ public class HealthManagerScript : MonoBehaviour
         }
     }
 
-    public void DeathOnCollision()
+    public virtual void Death()
     {
         isDead = true;
-        Destroy(gameObject);
+        curHp = 0;
+        Destroy(gameObject, destroyDelay);
     }
 
-    public void CheckDeath()
+    public virtual void CheckDeath()
     {
         if (isDead)
         {
-            Destroy(gameObject);
+            Death();
         }
     }
 }
