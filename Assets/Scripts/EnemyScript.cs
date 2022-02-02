@@ -14,6 +14,8 @@ public class EnemyScript : HealthManagerScript
     public float damage = 10;
     public float deathPushForce = 15;
 
+    public ParticleSystem hitEffect;
+
     public override void Start()
     {
         base.Start();
@@ -57,6 +59,7 @@ public class EnemyScript : HealthManagerScript
 
     public void PushObject(Rigidbody otherRB)
     {
+        
         otherRB.AddForce(transform.forward * deathPushForce, ForceMode.Impulse);
     }
 
@@ -72,6 +75,7 @@ public class EnemyScript : HealthManagerScript
         if(collision.gameObject.CompareTag("Player"))
         {
             collision.gameObject.GetComponent<HealthManagerScript>().TakeDamage(damage);
+            Instantiate(hitEffect, collision.contacts[0].point, hitEffect.transform.rotation);
             PushObject(collision.gameObject.GetComponent<Rigidbody>());
             enemyHealthScript.Death();
         }

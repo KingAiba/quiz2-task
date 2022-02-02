@@ -136,6 +136,7 @@ MonoBehaviour:
   weaponHolder: {fileID: 0}
   RagdollEnabled: 0
   hpText: {fileID: 0}
+  deathEffect: {fileID: 198247871303120836, guid: e473029e4c70ad543a6879b82a732f4f, type: 3}
 --- !u!54 &2777007991656013515
 Rigidbody:
   m_ObjectHideFlags: 0

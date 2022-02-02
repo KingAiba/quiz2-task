@@ -152,3 +152,4 @@ MonoBehaviour:
   target: {fileID: 0}
   damage: 10
   deathPushForce: 15
+  hitEffect: {fileID: 19800004, guid: fb7b0526ade434043b350a180d741cf3, type: 3}

@@ -11,25 +11,30 @@ public class ProjectileScript : MonoBehaviour
     public float ttl = 8;
 
     Rigidbody projectileRB;
-    // Start is called before the first frame update
+
+    public ParticleSystem projectileEffect;
+   
     void Start()
     {
+        // Get Projectile rigid body
         projectileRB = GetComponent<Rigidbody>();
+        // Launch projectile
         Launch();
+        // Start ttl timer
         StartCoroutine(TTLTimer());
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
         
     }
-
+    // This function uses rigidbody Addforce to launch the projectile
     public void Launch()
     {
         projectileRB.AddForce(transform.forward * speed, ForceMode.Impulse);
     }
-
+    // Add force to enemy rigidbody
     public void PushEnemy(Rigidbody otherRB)
     {
         otherRB.AddForce(transform.forward * forcePush, ForceMode.Impulse);
@@ -37,23 +42,34 @@ public class ProjectileScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        // if trigger in enemy
         if(other.gameObject.CompareTag("Enemy"))
         {
+            // do damage and add force
             other.GetComponent<HealthManagerScript>().TakeDamage(damage);
             PushEnemy(other.GetComponent<Rigidbody>());
-
+            // stop ttl timer and destroy this projectiler
             StopCoroutine(TTLTimer());
-            Destroy(gameObject);
+            ProjectileDestroy();
         }
+        // if collision with wall 
         else if(other.gameObject.CompareTag("Wall"))
         {
-            Destroy(gameObject);
+            // destroy this projectile
+            ProjectileDestroy();
         }
     }
+    // destroy projectile and play visual/sound effects
+    public void ProjectileDestroy()
+    {
+        Instantiate(projectileEffect, transform.position, projectileRB.transform.rotation);
+        Destroy(gameObject);
+    }
 
+    // ttl timer, destroys objects after waiting for given seconds
     IEnumerator TTLTimer()
     {
         yield return new WaitForSeconds(ttl);
-        Destroy(gameObject);
+        ProjectileDestroy();
     }
 }

@@ -114,6 +114,7 @@ MonoBehaviour:
   speed: 20
   forcePush: 15
   ttl: 5
+  projectileEffect: {fileID: 19800004, guid: f95ff734540a0d749be6571b6cb5b37f, type: 3}
 --- !u!54 &3003242038220155634
 Rigidbody:
   m_ObjectHideFlags: 0

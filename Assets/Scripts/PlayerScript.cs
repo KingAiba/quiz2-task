@@ -14,6 +14,7 @@ public class PlayerScript : HealthManagerScript
 
     public TMP_Text hpText;
 
+    public ParticleSystem deathEffect;
 
     public override void Start()
     {
@@ -37,14 +38,14 @@ public class PlayerScript : HealthManagerScript
     {
         PlayerMovement();
     }
-
+    // Get input using horizontal and vertical axis
     public void getInput()
     {
         if (!isDead)
         {
             float horizontalInput = Input.GetAxis("Horizontal");
             float verticalInput = Input.GetAxis("Vertical");
-
+            // set movedirection 
             moveDirection = new Vector3(horizontalInput, 0, verticalInput).normalized;
 
             SwitchWeapons();
@@ -52,12 +53,12 @@ public class PlayerScript : HealthManagerScript
         }
 
     }
-
+    // update health ui text
     public void UpdateHPText()
     {
         hpText.SetText("HP:" + curHp + "/" + maxHp);
     }
-
+    // attack using weapon on space down
     public void Attack()
     {
         if(Input.GetKeyDown(KeyCode.Space))
@@ -65,7 +66,7 @@ public class PlayerScript : HealthManagerScript
             weaponHolder.FireActiveWeapon();
         }
     }
-
+    // switch weapons on key down
     public void SwitchWeapons()
     {
         if(Input.GetKeyDown(KeyCode.Alpha1))
@@ -81,24 +82,28 @@ public class PlayerScript : HealthManagerScript
             weaponHolder.PickWeapon(2);
         }
     }
-
+    // player movement using movementScript functions
     public void PlayerMovement()
     {
         playerMovementScript.moveObject(moveDirection);
         playerMovementScript.rotateObject(moveDirection);
     }
-
+    // add force to player rigidbody
     public void AddForceToPlayer(Vector3 force, ForceMode forcemode)
     {
         playerMovementScript.objectRB.AddForce(force, forcemode);
     }
-
+    // death procedure
     public override void Death()
     {
-        EnableRagdoll();
-        base.Death();
+        if (!isDead)
+        {
+            Instantiate(deathEffect, transform.position, deathEffect.transform.rotation);
+            EnableRagdoll();
+            base.Death();
+        }
     }
-
+    // iterate through all collider and rigidbody(except player object and weapons) and disable them.
     public void DisableRagdoll()
     {
         Rigidbody[] rbArr = GetComponentsInChildren<Rigidbody>();
@@ -129,7 +134,7 @@ public class PlayerScript : HealthManagerScript
         }
         RagdollEnabled = false;
     }
-
+    // iterate through all collider and rigidbody and enable them.
     public void EnableRagdoll()
     {
         Rigidbody[] rbArr = GetComponentsInChildren<Rigidbody>();
