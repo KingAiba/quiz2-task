@@ -16,12 +16,17 @@ public class PlayerScript : HealthManagerScript
 
     public ParticleSystem deathEffect;
 
+    public AudioClip hitSound;
+    public AudioSource soundEffects;
+
     public override void Start()
     {
         base.Start();
         playerMovementScript = GetComponent<movementScript>();
         weaponHolder = transform.Find("Stylized Astronaut").transform.Find("WeaponHolder").GetComponent<WeaponHolderScript>();
         gameManager.playerScript = this;
+
+        soundEffects = GetComponent<AudioSource>();
 
         DisableRagdoll();
     }
@@ -91,6 +96,7 @@ public class PlayerScript : HealthManagerScript
     // add force to player rigidbody
     public void AddForceToPlayer(Vector3 force, ForceMode forcemode)
     {
+        soundEffects.PlayOneShot(hitSound);
         playerMovementScript.objectRB.AddForce(force, forcemode);
     }
     // death procedure
