@@ -6,6 +6,8 @@ public class WallScript : MonoBehaviour
 {
     HealthManagerScript objHPScript;
     public bool isDistructable = false;
+
+    public float forceStrength;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,7 +28,13 @@ public class WallScript : MonoBehaviour
         }
         else if(collision.gameObject.CompareTag("Player"))
         {
-            collision.gameObject.GetComponent<PlayerScript>().Death();
+            PlayerScript player = collision.gameObject.GetComponent<PlayerScript>();
+
+            Vector3 forceDir = -(collision.contacts[0].point - transform.position).normalized;
+            player.AddForceToPlayer(forceDir * forceStrength, ForceMode.Impulse);
+
+            player.Death();
+            
         }
     }
 }

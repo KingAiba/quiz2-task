@@ -10,6 +10,8 @@ public class PlayerScript : HealthManagerScript
 
     public WeaponHolderScript weaponHolder;
 
+    public bool RagdollEnabled = false;
+
     public TMP_Text hpText;
 
 
@@ -17,8 +19,10 @@ public class PlayerScript : HealthManagerScript
     {
         base.Start();
         playerMovementScript = GetComponent<movementScript>();
-        weaponHolder = transform.Find("WeaponHolder").GetComponent<WeaponHolderScript>();
+        weaponHolder = transform.Find("Stylized Astronaut").transform.Find("WeaponHolder").GetComponent<WeaponHolderScript>();
         gameManager.playerScript = this;
+
+        DisableRagdoll();
     }
 
 
@@ -84,5 +88,66 @@ public class PlayerScript : HealthManagerScript
         playerMovementScript.rotateObject(moveDirection);
     }
 
-    
+    public void AddForceToPlayer(Vector3 force, ForceMode forcemode)
+    {
+        playerMovementScript.objectRB.AddForce(force, forcemode);
+    }
+
+    public override void Death()
+    {
+        EnableRagdoll();
+        base.Death();
+    }
+
+    public void DisableRagdoll()
+    {
+        Rigidbody[] rbArr = GetComponentsInChildren<Rigidbody>();
+        Collider[] cArr = GetComponentsInChildren<Collider>();
+
+        foreach (Collider c in cArr)
+        {
+            if (c.gameObject.CompareTag("Player") || c.gameObject.CompareTag("Weapon"))
+            {
+                continue;
+            }
+            else
+            {
+                c.enabled = false;
+            }
+        }
+
+        foreach (Rigidbody rb in rbArr)
+        {
+            if (rb.gameObject.CompareTag("Player") || rb.gameObject.CompareTag("Weapon"))
+            {
+                continue;
+            }
+            else
+            {
+                rb.isKinematic = true;
+            }
+        }
+        RagdollEnabled = false;
+    }
+
+    public void EnableRagdoll()
+    {
+        Rigidbody[] rbArr = GetComponentsInChildren<Rigidbody>();
+        Collider[] cArr = GetComponentsInChildren<Collider>();
+
+        foreach (Collider c in cArr)
+        {
+
+            c.enabled = true;
+
+        }
+        foreach (Rigidbody rb in rbArr)
+        {
+            rb.isKinematic = false;
+        }
+        RagdollEnabled = true;
+    }
+
+
+
 }
